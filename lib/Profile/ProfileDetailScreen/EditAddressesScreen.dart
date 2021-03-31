@@ -1,0 +1,327 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:mercado_na_nuvem/APIs/config.dart';
+import 'CompanyModel.dart';
+import 'ProfileDetailScreen.dart';
+
+class EditAdrressesScreen extends StatefulWidget {
+  final address;
+  final userData;
+  const EditAdrressesScreen({Key key, this.address, this.userData});
+  @override
+  _EditAdrressesScreenState createState() => _EditAdrressesScreenState();
+}
+
+class _EditAdrressesScreenState extends State<EditAdrressesScreen> {
+  List<Company> _companies = Company.getListState();
+  List<DropdownMenuItem<Company>> _dropdownMenuItems;
+  Company _selectedState;
+  var telephone;
+  var postcode;
+  var street;
+  var city;
+
+  @override
+  void initState() {
+    _dropdownMenuItems =
+        buildDropdownMenuItems(_companies).cast<DropdownMenuItem<Company>>();
+    _selectedState = _dropdownMenuItems[0].value;
+    for (var item in _dropdownMenuItems) {
+      if (item.value.id == widget.address.region_id) {
+        _selectedState = item.value;
+      }
+    }
+    super.initState();
+  }
+
+  List<DropdownMenuItem<Company>> buildDropdownMenuItems(List companies) {
+    List<DropdownMenuItem<Company>> items = List();
+    for (Company company in companies) {
+      items.add(DropdownMenuItem(value: company, child: Text(company.name)));
+    }
+    return items;
+  }
+
+  onchangeDropdownItem(Company selectedState) {
+    setState(() {
+      _selectedState = selectedState;
+      widget.address.regionId = _selectedState.id;
+    });
+  }
+
+  Future<void> _showMyDialog(String msg, title) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          elevation: 5,
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(msg),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Fechar', style: TextStyle(color: Colors.blue)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future editAddress(telephone, postcode, street, city, idAddress) async {
+    final String url = 'https://' +
+        base_url +
+        '/rest/V1/customers/' +
+        widget.userData.id.toString();
+
+    final response = await http.put(url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + "1bbiuz9u0u9ruroxl7dkn1z36qty4khx",
+        },
+        body: jsonEncode({
+          "customer": {
+            "id": widget.userData.id,
+            "email": widget.userData.email,
+            "firstname": widget.userData.firstname,
+            "lastname": widget.userData.lastname,
+            "addresses": [
+              {
+                "id": idAddress,
+                "firstname": widget.userData.firstname,
+                "lastname": widget.userData.lastname,
+                "street": [street[0], street[1], street[2]],
+                "city": city,
+                "region_id": 499,
+                "postcode": postcode,
+                "country_id": "BR",
+                "telephone": telephone
+              },
+              {
+                "firstname": widget.userData.firstname,
+                "lastname": widget.userData.lastname,
+                "street": [street[0], street[1], street[2]],
+                "city": city,
+                "region_id": 499,
+                "postcode": postcode,
+                "country_id": "BR",
+                "telephone": telephone
+              }
+            ]
+          },
+        }));
+
+    if (response.statusCode == 200) {
+      Navigator.pop(context);
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => ProfileDetailScreen()));
+    } else {
+      _showMyDialog('Erro ao Salvar!', 'Erro');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    telephone = telephone == null ? widget.address.telephone : telephone;
+    postcode = postcode == null ? widget.address.postcode : postcode;
+    street = street == null ? widget.address.street : street;
+    city = city == null ? widget.address.city : city;
+
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.blue),
+        title: Text(
+          'Endereço',
+          style: TextStyle(color: Colors.blue),
+        ),
+      ),
+      body: Container(
+        child: Center(
+          child: ListView(
+            children: [
+              SizedBox(
+                height: 20.0,
+              ),
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: DropdownButton(
+                    value: _selectedState,
+                    items: _dropdownMenuItems,
+                    onChanged: onchangeDropdownItem,
+                  )),
+              TextFormField(
+                autofocus: false,
+                initialValue: widget.address == "" ? "" : widget.address.city,
+                decoration: InputDecoration(
+                  hintText: 'Cidade',
+                  contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(32.0)),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    city = value;
+                  });
+                },
+              ),
+              TextFormField(
+                autofocus: false,
+                initialValue:
+                    widget.address == "" ? "" : widget.address.street[2],
+                decoration: InputDecoration(
+                  hintText: 'Bairro',
+                  contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(32.0)),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    street[2] = value;
+                  });
+                },
+              ),
+              TextFormField(
+                autofocus: false,
+                initialValue:
+                    widget.address == "" ? "" : widget.address.street[0],
+                decoration: InputDecoration(
+                  hintText: 'Enderço',
+                  contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(32.0)),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    street[0] = value;
+                  });
+                },
+              ),
+              TextFormField(
+                autofocus: false,
+                initialValue:
+                    widget.address == "" ? "" : widget.address.street[1],
+                decoration: InputDecoration(
+                  hintText: 'Numero',
+                  contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(32.0)),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    street[1] = value;
+                  });
+                },
+              ),
+              TextFormField(
+                autofocus: false,
+                initialValue:
+                    widget.address == "" ? "" : widget.address.postcode,
+                decoration: InputDecoration(
+                  hintText: 'CEP',
+                  contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(32.0)),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    postcode = value;
+                  });
+                },
+              ),
+              TextFormField(
+                autofocus: false,
+                initialValue:
+                    widget.address == "" ? "" : widget.address.telephone,
+                decoration: InputDecoration(
+                  hintText: 'Telefone',
+                  contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(32.0)),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    telephone = value;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 8, left: 15, right: 15),
+        child: RaisedButton(
+          onPressed: () {
+            editAddress(telephone, postcode, street, city, widget.address.id);
+          },
+          child: Text(
+            'Salvar Dados',
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Colors.blue,
+          elevation: 5,
+        ),
+      ),
+    );
+  }
+}
