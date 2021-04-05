@@ -39,13 +39,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             shrinkWrap: true,
                             itemCount: snapshot.data.childrenData.length,
                             itemBuilder: (context, index) {
-                              return Card(
-                                  elevation: 5,
-                                  shadowColor: Colors.black,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  child: InkWell(
+                              return Column(
+                                children: [
+                                  InkWell(
                                     onTap: () {
                                       Navigator.push(
                                           context,
@@ -57,19 +53,75 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                                               .childrenData[
                                                           index])));
                                     },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 12, bottom: 12),
-                                      child: Text(
-                                        snapshot.data.childrenData[index].name,
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontStyle: FontStyle.italic,
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            height: 80,
+                                            width: 80,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                  fit: BoxFit.fill,
+                                                  image: NetworkImage(
+                                                    'https://mercadonanuvem.s3-sa-east-1.amazonaws.com/categorias/' +
+                                                        snapshot
+                                                            .data
+                                                            .childrenData[index]
+                                                            .id
+                                                            .toString() +
+                                                        '.webp',
+                                                  ),
+                                                )),
+                                          ),
                                         ),
-                                        textAlign: TextAlign.center,
-                                      ),
+                                        Container(
+                                          height: 80,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              1.7,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                snapshot.data
+                                                    .childrenData[index].name,
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                ),
+                                              ),
+                                              Text(
+                                                snapshot
+                                                    .data
+                                                    .childrenData[index]
+                                                    .productCount
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.blueAccent),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Icon(Icons.arrow_forward_ios,
+                                              color: Colors.blueAccent),
+                                        )
+                                      ],
                                     ),
-                                  ));
+                                  ),
+                                  Divider(
+                                    color: Colors.grey[300],
+                                  ),
+                                ],
+                              );
                             },
                           ),
                         ),

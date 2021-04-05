@@ -23,13 +23,15 @@ class Categories {
 
 class ChildrenData {
   int id;
+  int productCount;
   String name;
   List<SubChildrenData> subChildrenData;
 
-  ChildrenData({this.id, this.name, this.subChildrenData});
+  ChildrenData({this.id, this.name, this.productCount, this.subChildrenData});
 
   ChildrenData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    productCount = json['product_count'];
     name = json['name'];
     if (json['children_data'] != null) {
       subChildrenData = new List<SubChildrenData>();
@@ -42,6 +44,7 @@ class ChildrenData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['product_count'] = this.productCount;
     data['name'] = this.name;
     if (this.subChildrenData != null) {
       data['children_data'] =
@@ -53,19 +56,22 @@ class ChildrenData {
 
 class SubChildrenData {
   int id;
+  int productCount;
   String name;
 
-  SubChildrenData({this.id, this.name});
+  SubChildrenData({this.id, this.name, this.productCount});
 
   SubChildrenData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    productCount = json['product_count'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
+    data['product_count'] = this.productCount;
     return data;
   }
 }

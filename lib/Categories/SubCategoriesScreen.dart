@@ -93,13 +93,9 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
                       shrinkWrap: true,
                       itemCount: widget.subCategories.subChildrenData.length,
                       itemBuilder: (context, index) {
-                        return Card(
-                            elevation: 5,
-                            shadowColor: Colors.black,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            child: InkWell(
+                        return Column(
+                          children: [
+                            InkWell(
                               onTap: () {
                                 Navigator.push(
                                     context,
@@ -113,20 +109,71 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
                                               option: 0,
                                             )));
                               },
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 12, bottom: 12),
-                                child: Text(
-                                  widget.subCategories.subChildrenData[index]
-                                      .name,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontStyle: FontStyle.italic,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      height: 80,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image: NetworkImage(
+                                              'https://mercadonanuvem.s3-sa-east-1.amazonaws.com/categorias/' +
+                                                  widget.subCategories.id
+                                                      .toString() +
+                                                  '.webp',
+                                            ),
+                                          )),
+                                    ),
                                   ),
-                                  textAlign: TextAlign.center,
-                                ),
+                                  Container(
+                                    height: 80,
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.7,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          widget.subCategories
+                                              .subChildrenData[index].name,
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                          ),
+                                          textAlign: TextAlign.start,
+                                        ),
+                                        Text(
+                                          widget
+                                              .subCategories
+                                              .subChildrenData[index]
+                                              .productCount
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.blueAccent),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(Icons.arrow_forward_ios,
+                                        color: Colors.blueAccent),
+                                  )
+                                ],
                               ),
-                            ));
+                            ),
+                            Divider(
+                              color: Colors.grey[300],
+                            )
+                          ],
+                        );
                       },
                     ),
                   ),

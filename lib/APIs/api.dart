@@ -12,7 +12,7 @@ import 'config.dart';
 Future<Categories> fetchCategories() async {
   final String url = 'http://' +
       base_url +
-      '/rest/default/V1/categories?searchCriteria=0&fields=children_data[id,name,children_data[id,name]]&searchCriteria[sortOrders][0][field]=name&searchCriteria[sortOrders][0][direction]=ASC';
+      '/rest/default/V1/categories?searchCriteria=0&fields=children_data[id,name,product_count,children_data[id,product_count,name]]&searchCriteria[sortOrders][0][field]=name&searchCriteria[sortOrders][0][direction]=ASC';
   final response = await http.get(url, headers: {
     "Content-Type": "application/json",
     "Authorization": "Bearer " + '1bbiuz9u0u9ruroxl7dkn1z36qty4khx',
