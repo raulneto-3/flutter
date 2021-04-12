@@ -20,11 +20,11 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.blue),
+        backgroundColor: Colors.blue,
+        iconTheme: IconThemeData(color: Colors.white),
         title: Text(
           'Informações da Conta',
-          style: TextStyle(color: Colors.blue),
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: Container(
@@ -106,20 +106,23 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(15),
-                  child: RaisedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ChangePassScreen(account: widget.account)));
-                    },
-                    child: Text(
-                      'Alterar Senha',
-                      style: TextStyle(color: Colors.white),
+                  child: SizedBox(
+                    height: 50,
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ChangePassScreen(account: widget.account)));
+                      },
+                      child: Text(
+                        'Alterar Senha',
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      color: Colors.blue,
+                      elevation: 5,
                     ),
-                    color: Colors.blue,
-                    elevation: 5,
                   ),
                 ),
               ),
@@ -129,23 +132,28 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 8, left: 15, right: 15),
-        child: RaisedButton(
-          onPressed: () {
-            editProfile(
-                widget.account,
-                email == null ? widget.account.email : email,
-                lastname == null ? widget.account.lastname : lastname,
-                firstname == null ? widget.account.firstname : firstname);
-            Navigator.pop(context);
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => ProfileDetailScreen()));
-          },
-          child: Text(
-            'Salvar Dados',
-            style: TextStyle(color: Colors.white),
+        child: SizedBox(
+          height: 50,
+          child: RaisedButton(
+            onPressed: () {
+              editProfile(
+                  widget.account,
+                  email == null ? widget.account.email : email,
+                  lastname == null ? widget.account.lastname : lastname,
+                  firstname == null ? widget.account.firstname : firstname);
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProfileDetailScreen()));
+            },
+            child: Text(
+              'Salvar Dados',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            color: Colors.blue,
+            elevation: 5,
           ),
-          color: Colors.blue,
-          elevation: 5,
         ),
       ),
     );

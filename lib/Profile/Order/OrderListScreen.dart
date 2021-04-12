@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mercado_na_nuvem/APIs/OrdersModel.dart';
 import 'package:mercado_na_nuvem/APIs/api.dart';
 import 'package:mercado_na_nuvem/APIs/config.dart';
-import 'package:mercado_na_nuvem/Categories/ProductListScreen.dart';
+import '../../SearchScreenProducts.dart';
 
 import 'OrderDetailScreen.dart';
 
@@ -42,12 +42,8 @@ class _OrderListScreenState extends State<OrderListScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ProductListScreen(
-                                page: 1,
-                                categorieId: 0,
-                                name: search,
+                          builder: (context) => Search(
                                 search: search,
-                                option: 1,
                               )));
                 },
                 style: TextStyle(color: Colors.white),
@@ -61,11 +57,8 @@ class _OrderListScreenState extends State<OrderListScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ProductListScreen(
-                                      page: 1,
-                                      categorieId: 0,
-                                      name: search,
-                                      option: 1,
+                                builder: (context) => Search(
+                                      search: search,
                                     )));
                       },
                     ),
@@ -107,7 +100,9 @@ class _OrderListScreenState extends State<OrderListScreen> {
                         Expanded(
                           child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: snapshot.data.items.length,
+                            itemCount: snapshot.data.items == null
+                                ? 0
+                                : snapshot.data.items.length,
                             itemBuilder: (context, index) {
                               var statusPTB;
                               if (snapshot.data.items[index].status ==

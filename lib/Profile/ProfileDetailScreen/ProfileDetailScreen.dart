@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mercado_na_nuvem/APIs/ProfileModel.dart';
 import 'package:mercado_na_nuvem/APIs/api.dart';
-import 'package:mercado_na_nuvem/Categories/ProductListScreen.dart';
+import '../../SearchScreenProducts.dart';
+import 'CreateAddresseScreen.dart';
 import 'EditAccountScreen.dart';
 import 'EditAddressesScreen.dart';
 
@@ -11,6 +12,7 @@ class ProfileDetailScreen extends StatefulWidget {
 }
 
 class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
+  var userData;
   bool isSearching = false;
   var search;
   List countries = [];
@@ -37,12 +39,8 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ProductListScreen(
-                                page: 1,
-                                categorieId: 0,
-                                name: search,
+                          builder: (context) => Search(
                                 search: search,
-                                option: 1,
                               )));
                 },
                 style: TextStyle(color: Colors.white),
@@ -56,11 +54,8 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ProductListScreen(
-                                      page: 1,
-                                      categorieId: 0,
-                                      name: search,
-                                      option: 1,
+                                builder: (context) => Search(
+                                      search: search,
                                     )));
                       },
                     ),
@@ -92,6 +87,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
           future: futureProfile,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              userData = snapshot.data;
               return Column(
                 children: [
                   Padding(
@@ -122,19 +118,26 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Text(snapshot.data.firstname +
-                                      " " +
-                                      snapshot.data.lastname)
+                                  Text(
+                                    snapshot.data.firstname +
+                                        " " +
+                                        snapshot.data.lastname,
+                                    style: TextStyle(fontSize: 15),
+                                  )
                                 ],
                               ),
                             ),
-                            Divider(),
                             Container(
                               padding: EdgeInsets.only(left: 10, right: 5),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                children: <Widget>[Text(snapshot.data.email)],
+                                children: <Widget>[
+                                  Text(
+                                    snapshot.data.email,
+                                    style: TextStyle(fontSize: 15),
+                                  )
+                                ],
                               ),
                             ),
                             FlatButton(
@@ -194,20 +197,25 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
-                                          Text(snapshot
-                                                  .data.addresses[index].city +
-                                              " - " +
-                                              snapshot.data.addresses[index]
-                                                  .region.region +
-                                              " - " +
-                                              snapshot.data.addresses[index]
-                                                  .countryId),
-                                          Text(snapshot
-                                              .data.addresses[index].postcode)
+                                          Text(
+                                            snapshot.data.addresses[index]
+                                                    .city +
+                                                " - " +
+                                                snapshot.data.addresses[index]
+                                                    .region.region +
+                                                " - " +
+                                                snapshot.data.addresses[index]
+                                                    .countryId,
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                          Text(
+                                            snapshot
+                                                .data.addresses[index].postcode,
+                                            style: TextStyle(fontSize: 15),
+                                          )
                                         ],
                                       ),
                                     ),
-                                    Divider(),
                                     Container(
                                       padding:
                                           EdgeInsets.only(left: 10, right: 5),
@@ -215,16 +223,22 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
-                                          Text(snapshot.data.addresses[index]
-                                                  .street[0] +
-                                              " - " +
-                                              snapshot.data.addresses[index]
-                                                  .street[1] +
-                                              " - " +
-                                              snapshot.data.addresses[index]
-                                                  .street[2]),
-                                          Text(snapshot
-                                              .data.addresses[index].telephone)
+                                          Text(
+                                            snapshot.data.addresses[index]
+                                                    .street[0] +
+                                                " - " +
+                                                snapshot.data.addresses[index]
+                                                    .street[1] +
+                                                " - " +
+                                                snapshot.data.addresses[index]
+                                                    .street[2],
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                          Text(
+                                            snapshot.data.addresses[index]
+                                                .telephone,
+                                            style: TextStyle(fontSize: 15),
+                                          )
                                         ],
                                       ),
                                     ),
@@ -277,22 +291,26 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
           }),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 8, left: 15, right: 15),
-        child: RaisedButton(
-          disabledColor: Colors.grey,
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => EditAdrressesScreen(
-                          address: "",
-                        )));
-          },
-          child: Text(
-            'Criar Endereço',
-            style: TextStyle(color: Colors.white),
+        child: SizedBox(
+          height: 50,
+          child: RaisedButton(
+            disabledColor: Colors.grey,
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CreateAdrresseScreen(
+                            userData: userData,
+                          )));
+            },
+            child: Text(
+              'Criar Endereço',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+            color: Colors.blue,
+            elevation: 5,
           ),
-          color: Colors.blue,
-          elevation: 5,
         ),
       ),
     );

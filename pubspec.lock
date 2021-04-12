@@ -125,6 +125,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.8.1"
+  flutter_paginator:
+    dependency: "direct main"
+    description:
+      name: flutter_paginator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
   flutter_test:
     dependency: "direct dev"
     description: flutter

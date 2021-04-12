@@ -188,7 +188,8 @@ class _LoginPageState extends State<LoginPage> {
           if (_fistClick) {
             _fistClick = false;
             mnnLoginAdmin(user, _pass);
-            // Navigator.of(context).pushNamed(HomePage.tag);
+            // Navigator.push(context,
+            //     MaterialPageRoute(builder: (context) => BottomNavBar(page: 0)));
           }
         },
         padding: EdgeInsets.all(12),

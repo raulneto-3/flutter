@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'APIs/config.dart';
-import 'Categories/ProductListScreen.dart';
+import 'SearchScreenProducts.dart';
 import 'LoginPage.dart';
 
 class CadastroScreen extends StatefulWidget {
@@ -102,12 +102,8 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ProductListScreen(
-                                page: 1,
-                                categorieId: 0,
-                                name: search,
+                          builder: (context) => Search(
                                 search: search,
-                                option: 1,
                               )));
                 },
                 style: TextStyle(color: Colors.white),
@@ -121,11 +117,8 @@ class _CadastroScreenState extends State<CadastroScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ProductListScreen(
-                                      page: 1,
-                                      categorieId: 0,
-                                      name: search,
-                                      option: 1,
+                                builder: (context) => Search(
+                                      search: search,
                                     )));
                       },
                     ),

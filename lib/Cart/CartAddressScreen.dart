@@ -3,9 +3,11 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:mercado_na_nuvem/APIs/config.dart';
 import 'package:mercado_na_nuvem/Cart/CartPaymentScreen.dart';
-import 'package:mercado_na_nuvem/Categories/ProductListScreen.dart';
+import 'package:mercado_na_nuvem/Profile/ProfileDetailScreen/CreateAddresseScreen.dart';
 import 'package:mercado_na_nuvem/Profile/ProfileDetailScreen/EditAddressesScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../SearchScreenProducts.dart';
 
 class CartAddressScreen extends StatefulWidget {
   final userData;
@@ -20,6 +22,7 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
   var search;
   List countries = [];
   List filteredCountries = [];
+  int selectedRadioTile;
 
   Future configAddress(index, option) async {
     var address = widget.userData.addresses[index];
@@ -86,37 +89,24 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
     }
   }
 
-  List<bool> _isChecked;
   var taxaEntrega = 0.0;
 
   @override
   void initState() {
     super.initState();
-    _isChecked = List<bool>.filled(
-        (widget.userData.addresses == null
-                ? 0
-                : widget.userData.addresses.length) +
-            1,
-        false);
+    selectedRadioTile = widget.userData.addresses.length;
   }
 
-  void _change(val, index) {
-    var i = 0;
-    setState(
-      () {
-        while (i < _isChecked.length) {
-          _isChecked[i] = false;
-          i++;
-        }
-        _isChecked[index] = val;
-      },
-    );
+  setSelectedRadioTile(int val) {
+    setState(() {
+      selectedRadioTile = val;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     var addresses;
-    if (_isChecked.length == 1) {
+    if (widget.userData.addresses == null) {
       addresses = Expanded(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 150),
@@ -125,8 +115,8 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => EditAdrressesScreen(
-                            address: "",
+                      builder: (context) => CreateAdrresseScreen(
+                            userData: widget.userData,
                           )));
             },
             child: Text(
@@ -142,7 +132,7 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
       addresses = Expanded(
         child: ListView.builder(
           padding: const EdgeInsets.all(4),
-          itemCount: _isChecked.length - 1,
+          itemCount: widget.userData.addresses.length,
           itemBuilder: (_, index) {
             return Container(
               width: 200,
@@ -155,31 +145,33 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    CheckboxListTile(
-                        activeColor: Colors.greenAccent,
-                        title: Text(
-                          widget.userData.firstname +
-                              " " +
-                              widget.userData.lastname,
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white),
+                    RadioListTile(
+                      activeColor: Colors.greenAccent,
+                      title: Text(
+                        widget.userData.firstname +
+                            " " +
+                            widget.userData.lastname,
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                      subtitle: Text(
+                        widget.userData.addresses[index].telephone,
+                        style: TextStyle(
+                          color: Colors.grey[300],
+                          fontSize: 14,
                         ),
-                        subtitle: Text(
-                          widget.userData.addresses[index].telephone,
-                          style: TextStyle(
-                            color: Colors.grey[300],
-                            fontSize: 12,
-                          ),
-                        ),
-                        value: _isChecked[index],
-                        onChanged: (val) {
-                          setState(() {
-                            taxaEntrega = 5;
-                            _change(val, index);
-                          });
-                        }),
+                      ),
+                      value: index,
+                      onChanged: (val) {
+                        setState(() {
+                          taxaEntrega = 5;
+                          setSelectedRadioTile(val);
+                        });
+                      },
+                      groupValue: selectedRadioTile,
+                    ),
                     Text(
                       widget.userData.addresses[index].street[0] +
                           ", " +
@@ -190,14 +182,14 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
                           widget.userData.addresses[index].region.regionCode,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 12,
+                        fontSize: 14,
                       ),
                     ),
                     Text(
                       widget.userData.addresses[index].postcode,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 12,
+                        fontSize: 13,
                       ),
                     ),
                     ButtonTheme.bar(
@@ -240,12 +232,10 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ProductListScreen(
-                                page: 1,
-                                categorieId: 0,
-                                name: search,
+                          builder: (context) => Search(
+                    
                                 search: search,
-                                option: 1,
+                            
                               )));
                 },
                 style: TextStyle(color: Colors.white),
@@ -259,11 +249,8 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ProductListScreen(
-                                      page: 1,
-                                      categorieId: 0,
-                                      name: search,
-                                      option: 1,
+                                builder: (context) => Search(
+                                      search: search,
                                     )));
                       },
                     ),
@@ -292,39 +279,41 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
         ],
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          Container(
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              color: Colors.blue,
-              elevation: 10,
-              child: CheckboxListTile(
-                  activeColor: Colors.greenAccent,
-                  title: Text(
-                    "Retirar na Loja",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white),
-                  ),
-                  subtitle: Text(
-                    'R\$ 0,00 ',
-                    style: TextStyle(
-                      color: Colors.grey[300],
-                      fontSize: 12,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Container(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                color: Colors.blue,
+                elevation: 10,
+                child: RadioListTile(
+                    groupValue: selectedRadioTile,
+                    activeColor: Colors.greenAccent,
+                    title: Text(
+                      "Retirar na Loja",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                     ),
-                  ),
-                  value: _isChecked[_isChecked.length - 1],
-                  onChanged: (val) {
-                    setState(() {
-                      taxaEntrega = 0;
-                      _change(val, _isChecked.length - 1);
-                    });
-                  }),
+                    subtitle: Text(
+                      'R\$ 0,00 ',
+                      style: TextStyle(
+                        color: Colors.grey[300],
+                        fontSize: 15,
+                      ),
+                    ),
+                    value: widget.userData.addresses.length,
+                    onChanged: (val) {
+                      setState(() {
+                        taxaEntrega = 0;
+                        setSelectedRadioTile(val);
+                      });
+                    }),
+              ),
             ),
           ),
           addresses,
@@ -335,13 +324,11 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
               borderRadius: BorderRadius.circular(15.0),
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
                   padding: EdgeInsets.fromLTRB(3, 4, 3, 3),
                   child: Text(
                     "Resumo do Pedido",
-                    textAlign: TextAlign.start,
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -400,30 +387,28 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
                     )
                   ],
                 ),
-                SizedBox(
-                  height: 12.0,
-                ),
-                Container(
-                  child: RaisedButton(
-                    child: Text("Finalizar Pedido"),
-                    textColor: Colors.white,
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      var i = 0;
-
-                      while (i < _isChecked.length) {
-                        if (_isChecked[i] == true) {
-                          if (i == _isChecked.length - 1) {
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: SizedBox(
+                      height: 50,
+                      child: RaisedButton(
+                        child: Text(
+                          "Finalizar Pedido",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        textColor: Colors.white,
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          if (widget.userData.addresses.length ==
+                              selectedRadioTile) {
                             configAddress(0, "freeshipping");
                           } else {
-                            configAddress(i, "flatrate");
+                            configAddress(selectedRadioTile, "flatrate");
                           }
-                          i++;
-                        } else {
-                          i++;
-                        }
-                      }
-                    },
+                        },
+                      ),
+                    ),
                   ),
                 )
               ],

@@ -110,11 +110,11 @@ class _CartScreenState extends State<CartScreen> {
                             ? snapshot.data.items[index].qty
                             : qtdProd[sku];
                         return Card(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Container(
+                            height: 110,
                             child: Row(
                               children: <Widget>[
                                 SizedBox(
@@ -130,8 +130,10 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                                 Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.only(left: 16),
+                                    padding: const EdgeInsets.all(8),
                                     child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text(
                                           snapshot.data.items[index].name,
@@ -140,14 +142,16 @@ class _CartScreenState extends State<CartScreen> {
                                             fontSize: 17.0,
                                           ),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8),
-                                          child: Text(
-                                            snapshot.data.items[index].sku,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w300),
-                                          ),
+                                        SizedBox(
+                                          height: 3,
+                                        ),
+                                        Text(
+                                          snapshot.data.items[index].sku,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                        SizedBox(
+                                          height: 3,
                                         ),
                                         Text(
                                           "R\$ " +
@@ -167,50 +171,54 @@ class _CartScreenState extends State<CartScreen> {
                                     ),
                                   ),
                                 ),
-                                Column(
-                                  children: <Widget>[
-                                    CustomIconButton(
-                                      iconData: Icons.add,
-                                      color: Theme.of(context).primaryColor,
-                                      onTap: () {
-                                        var newQty =
-                                            snapshot.data.items[index].qty + 1;
-                                        increment(
-                                            snapshot.data.items[index].sku);
-                                        updateItem(
-                                            snapshot.data.items[index].sku,
-                                            newQty,
-                                            snapshot.data.id);
-                                      },
-                                    ),
-                                    Text(
-                                      qtdProd[snapshot.data.items[index].sku]
-                                          .toString(),
-                                      style: const TextStyle(fontSize: 20),
-                                    ),
-                                    CustomIconButton(
-                                      iconData: Icons.remove,
-                                      color: Theme.of(context).primaryColor,
-                                      onTap: () {
-                                        var newQty = qtdProd[snapshot
-                                                .data.items[index].sku] -
-                                            1;
-                                        if (newQty == 0) {
-                                          deleteItem(snapshot
-                                              .data.items[index].item_id);
-                                          decrement(
-                                              snapshot.data.items[index].sku);
-                                        } else {
-                                          decrement(
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8),
+                                  child: Column(
+                                    children: <Widget>[
+                                      CustomIconButton(
+                                        iconData: Icons.add,
+                                        color: Theme.of(context).primaryColor,
+                                        onTap: () {
+                                          var newQty =
+                                              snapshot.data.items[index].qty +
+                                                  1;
+                                          increment(
                                               snapshot.data.items[index].sku);
                                           updateItem(
                                               snapshot.data.items[index].sku,
                                               newQty,
                                               snapshot.data.id);
-                                        }
-                                      },
-                                    ),
-                                  ],
+                                        },
+                                      ),
+                                      Text(
+                                        qtdProd[snapshot.data.items[index].sku]
+                                            .toString(),
+                                        style: const TextStyle(fontSize: 26),
+                                      ),
+                                      CustomIconButton(
+                                        iconData: Icons.remove,
+                                        color: Theme.of(context).primaryColor,
+                                        onTap: () {
+                                          var newQty = qtdProd[snapshot
+                                                  .data.items[index].sku] -
+                                              1;
+                                          if (newQty == 0) {
+                                            deleteItem(snapshot
+                                                .data.items[index].item_id);
+                                            decrement(
+                                                snapshot.data.items[index].sku);
+                                          } else {
+                                            decrement(
+                                                snapshot.data.items[index].sku);
+                                            updateItem(
+                                                snapshot.data.items[index].sku,
+                                                newQty,
+                                                snapshot.data.id);
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -249,22 +257,26 @@ class _CartScreenState extends State<CartScreen> {
                               " ")
                         ],
                       ),
-                      SizedBox(
-                        height: 12.0,
-                      ),
-                      Container(
-                        child: RaisedButton(
-                          child: Text("Finalizar Pedido"),
-                          textColor: Colors.white,
-                          color: Theme.of(context).primaryColor,
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CartAddressScreen(
-                                        userData: widget.userData,
-                                        subTotal: subTotal)));
-                          },
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: SizedBox(
+                          height: 50,
+                          child: RaisedButton(
+                            child: Text(
+                              "Finalizar Pedido",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            textColor: Colors.white,
+                            color: Theme.of(context).primaryColor,
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CartAddressScreen(
+                                          userData: widget.userData,
+                                          subTotal: subTotal)));
+                            },
+                          ),
                         ),
                       )
                     ],

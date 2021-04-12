@@ -58,8 +58,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
-                                            height: 80,
-                                            width: 80,
+                                            height: 60,
+                                            width: 60,
                                             decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
                                                 image: DecorationImage(
@@ -81,7 +81,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width /
-                                              1.7,
+                                              1.5,
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,

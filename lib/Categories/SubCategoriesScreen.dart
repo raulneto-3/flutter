@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ProductListScreen.dart';
+import 'ProductListScroll.dart';
 
 class SubCategoriesScreen extends StatefulWidget {
   final subCategories;
@@ -27,16 +27,16 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
                   search = value;
                 },
                 onSubmitted: (value) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProductListScreen(
-                                page: 1,
-                                categorieId: 0,
-                                name: search,
-                                search: search,
-                                option: 1,
-                              )));
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => Search(
+                  //               page: 1,
+                  //               categorieId: 0,
+                  //               name: search,
+                  //               search: search,
+                  //               option: 1,
+                  //             )));
                 },
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
@@ -46,15 +46,15 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ProductListScreen(
-                                      page: 1,
-                                      categorieId: 0,
-                                      name: search,
-                                      option: 1,
-                                    )));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => Search(
+                        //               page: 1,
+                        //               categorieId: 0,
+                        //               name: search,
+                        //               option: 1,
+                        //             )));
                       },
                     ),
                     hintText: "Pesquisar",
@@ -100,22 +100,19 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => ProductListScreen(
-                                              page: 1,
-                                              categorieId: widget.subCategories
-                                                  .subChildrenData[index].id,
-                                              name: widget.subCategories
-                                                  .subChildrenData[index].name,
-                                              option: 0,
-                                            )));
+                                        builder: (context) => ProductListScroll(
+                                            categorieId: widget.subCategories
+                                                .subChildrenData[index].id,
+                                            subCategories:
+                                                widget.subCategories.name)));
                               },
                               child: Row(
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Container(
-                                      height: 80,
-                                      width: 80,
+                                      height: 60,
+                                      width: 60,
                                       decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: DecorationImage(
@@ -132,7 +129,7 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
                                   Container(
                                     height: 80,
                                     width:
-                                        MediaQuery.of(context).size.width / 1.7,
+                                        MediaQuery.of(context).size.width / 1.5,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,

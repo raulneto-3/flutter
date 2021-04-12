@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:mercado_na_nuvem/APIs/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'ProductListScreen.dart';
+import '../SearchScreenProducts.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final product;
@@ -15,7 +15,7 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  var qty;
+  var qty = TextEditingController(text: '1');
   bool isSearching = false;
   var search;
   List countries = [];
@@ -31,7 +31,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + "1bbiuz9u0u9ruroxl7dkn1z36qty4khx",
         },
-        body: jsonEncode({"sku": sku, "qty": qty, "customer_id": customerId}));
+        body: jsonEncode(
+            {"sku": sku, "qty": int.parse(qty), "customer_id": customerId}));
 
     if (response.statusCode == 200) {
       _showMyDialog("Item Adicionado", "Ok");
@@ -86,12 +87,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ProductListScreen(
-                                page: 1,
-                                categorieId: 0,
-                                name: search,
+                          builder: (context) => Search(
                                 search: search,
-                                option: 1,
                               )));
                 },
                 style: TextStyle(color: Colors.white),
@@ -105,11 +102,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ProductListScreen(
-                                      page: 1,
-                                      categorieId: 0,
-                                      name: search,
-                                      option: 1,
+                                builder: (context) => Search(
+                                      search: search,
                                     )));
                       },
                     ),
@@ -144,12 +138,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             SizedBox(
               height: 12.0,
             ),
-            Text(
-              widget.product.name,
-              style: TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-            Divider(),
             Align(
               alignment: Alignment.center,
               child: Container(
@@ -166,8 +154,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
             ),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 300,
+                child: Text(
+                  widget.product.name,
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.start,
+                ),
+              ),
+            ),
             SizedBox(
-              height: 12.0,
+              height: 8.0,
             ),
             Text(
               "R\$ " +
@@ -187,33 +186,84 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 left: 50,
                 right: 50,
               ),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8),
-                  child: TextField(
-                    decoration: new InputDecoration(labelText: "Quantidade:"),
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      setState(() {
-                        qty = value;
-                      });
-                    },
-                  ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8),
+                child: TextField(
+                  controller: qty,
+                  decoration: new InputDecoration(labelText: "Quantidade:"),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    // qty.text = value;
+                  },
                 ),
               ),
             ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: 50,
+                    child: RaisedButton(
+                      color: Colors.grey[400],
+                      child: Text(
+                        '-',
+                        style: TextStyle(
+                            fontSize: 26,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          qty.text = (int.parse(qty.text) - 1).toString();
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: 50,
+                    child: RaisedButton(
+                      color: Colors.green,
+                      child: Text(
+                        '+',
+                        style: TextStyle(
+                            fontSize: 26,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          qty.text = (int.parse(qty.text) + 1).toString();
+                        });
+                      },
+                    ),
+                  ),
+                )
+              ],
+            )
           ],
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 8, left: 15, right: 15),
-        child: RaisedButton(
-          onPressed: () {
-            addItem(widget.product.sku, qty);
-          },
-          child: Text('Add Carrinho'),
-          color: Colors.blue,
-          elevation: 5,
+        padding: const EdgeInsets.only(bottom: 8, left: 50, right: 50),
+        child: SizedBox(
+          height: 50,
+          child: RaisedButton(
+            onPressed: () {
+              addItem(widget.product.sku, qty.text);
+            },
+            child: Text(
+              'Adicionar ao Carrinho',
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
+            color: Colors.blue,
+            elevation: 5,
+          ),
         ),
       ),
     );

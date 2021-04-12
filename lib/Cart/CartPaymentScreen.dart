@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:mercado_na_nuvem/APIs/config.dart';
-import 'package:mercado_na_nuvem/Categories/ProductListScreen.dart';
+import '../SearchScreenProducts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'EndCartScreen.dart';
@@ -21,25 +21,19 @@ class _CartPaymentScreenState extends State<CartPaymentScreen> {
   var search;
   List countries = [];
   List filteredCountries = [];
+  int selectedRadioTile;
 
   var payment = ['Pagar na Retirada'];
   @override
   void initState() {
     super.initState();
-    _isChecked = List<bool>.filled(payment.length, false);
+    selectedRadioTile = 0;
   }
 
-  void _change(val, index) {
-    var i = 0;
-    setState(
-      () {
-        while (i < _isChecked.length) {
-          _isChecked[i] = false;
-          i++;
-        }
-        _isChecked[index] = val;
-      },
-    );
+  setSelectedRadioTile(int val) {
+    setState(() {
+      selectedRadioTile = val;
+    });
   }
 
   Future createOrder(method) async {
@@ -81,12 +75,8 @@ class _CartPaymentScreenState extends State<CartPaymentScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ProductListScreen(
-                                page: 1,
-                                categorieId: 0,
-                                name: search,
+                          builder: (context) => Search(
                                 search: search,
-                                option: 1,
                               )));
                 },
                 style: TextStyle(color: Colors.white),
@@ -100,11 +90,8 @@ class _CartPaymentScreenState extends State<CartPaymentScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ProductListScreen(
-                                      page: 1,
-                                      categorieId: 0,
-                                      name: search,
-                                      option: 1,
+                                builder: (context) => Search(
+                                      search: search,
                                     )));
                       },
                     ),
@@ -141,40 +128,43 @@ class _CartPaymentScreenState extends State<CartPaymentScreen> {
               padding: const EdgeInsets.all(4),
               itemCount: payment.length,
               itemBuilder: (_, index) {
-                return Container(
-                  width: 200,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    color: Colors.blue,
-                    elevation: 10,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        CheckboxListTile(
-                            activeColor: Colors.greenAccent,
-                            title: Text(
-                              payment[index],
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white),
-                            ),
-                            subtitle: Text(
-                              payment[index],
-                              style: TextStyle(
-                                color: Colors.grey[300],
-                                fontSize: 12,
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Container(
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      color: Colors.blue,
+                      elevation: 10,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          RadioListTile(
+                              activeColor: Colors.greenAccent,
+                              title: Text(
+                                payment[index],
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.white),
                               ),
-                            ),
-                            value: _isChecked[index],
-                            onChanged: (val) {
-                              setState(() {
-                                _change(val, index);
-                              });
-                            }),
-                      ],
+                              subtitle: Text(
+                                payment[index],
+                                style: TextStyle(
+                                  color: Colors.grey[300],
+                                  fontSize: 12,
+                                ),
+                              ),
+                              value: 0,
+                              groupValue: selectedRadioTile,
+                              onChanged: (val) {
+                                setState(() {
+                                  setSelectedRadioTile(val);
+                                });
+                              }),
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -188,7 +178,6 @@ class _CartPaymentScreenState extends State<CartPaymentScreen> {
               borderRadius: BorderRadius.circular(15.0),
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
                   padding: EdgeInsets.fromLTRB(3, 4, 3, 3),
@@ -254,17 +243,23 @@ class _CartPaymentScreenState extends State<CartPaymentScreen> {
                     )
                   ],
                 ),
-                SizedBox(
-                  height: 12.0,
-                ),
-                Container(
-                  child: RaisedButton(
-                    child: Text("Finalizar Pedido"),
-                    textColor: Colors.white,
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      createOrder("checkmo");
-                    },
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: SizedBox(
+                      height: 50,
+                      child: RaisedButton(
+                        child: Text(
+                          "Finalizar Pedido",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        textColor: Colors.white,
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          createOrder("checkmo");
+                        },
+                      ),
+                    ),
                   ),
                 )
               ],

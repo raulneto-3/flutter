@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 class Products {
   List<Items> items;
   SearchCriteria searchCriteria;
@@ -77,5 +80,21 @@ class SearchCriteria {
     data['page_size'] = this.pageSize;
     data['current_page'] = this.currentPage;
     return data;
+  }
+}
+
+class CountriesData {
+  Products products;
+  int statusCode;
+  String errorMessage;
+
+  CountriesData.fromResponse(http.Response response) {
+    this.statusCode = response.statusCode;
+    products = Products.fromJson(jsonDecode(response.body));
+    print(products);
+  }
+
+  CountriesData.withError(String errorMessage) {
+    this.errorMessage = errorMessage;
   }
 }

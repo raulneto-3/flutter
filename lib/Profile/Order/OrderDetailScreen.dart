@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mercado_na_nuvem/APIs/config.dart';
-import 'package:mercado_na_nuvem/Categories/ProductListScreen.dart';
+import '../../SearchScreenProducts.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final order;
@@ -42,12 +42,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ProductListScreen(
-                                page: 1,
-                                categorieId: 0,
-                                name: search,
+                          builder: (context) => Search(
                                 search: search,
-                                option: 1,
                               )));
                 },
                 style: TextStyle(color: Colors.white),
@@ -61,11 +57,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ProductListScreen(
-                                      page: 1,
-                                      categorieId: 0,
-                                      name: search,
-                                      option: 1,
+                                builder: (context) => Search(
+                                      search: search,
                                     )));
                       },
                     ),

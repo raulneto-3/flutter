@@ -20,6 +20,7 @@ class CustomIconButton extends StatelessWidget {
             child: Icon(
               iconData,
               color: color,
+              size: 30,
             ),
           ),
         ),

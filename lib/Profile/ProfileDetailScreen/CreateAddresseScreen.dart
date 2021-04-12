@@ -5,21 +5,20 @@ import 'package:mercado_na_nuvem/APIs/config.dart';
 import 'CompanyModel.dart';
 import 'ProfileDetailScreen.dart';
 
-class EditAdrressesScreen extends StatefulWidget {
-  final address;
+class CreateAdrresseScreen extends StatefulWidget {
   final userData;
-  const EditAdrressesScreen({Key key, this.address, this.userData});
+  const CreateAdrresseScreen({Key key, this.userData});
   @override
-  _EditAdrressesScreenState createState() => _EditAdrressesScreenState();
+  _CreateAdrresseScreenState createState() => _CreateAdrresseScreenState();
 }
 
-class _EditAdrressesScreenState extends State<EditAdrressesScreen> {
+class _CreateAdrresseScreenState extends State<CreateAdrresseScreen> {
   List<Company> _companies = Company.getListState();
   List<DropdownMenuItem<Company>> _dropdownMenuItems;
   Company _selectedState;
   var telephone;
   var postcode;
-  var street;
+  var street = ["", "", ""];
   var city;
 
   @override
@@ -27,11 +26,7 @@ class _EditAdrressesScreenState extends State<EditAdrressesScreen> {
     _dropdownMenuItems =
         buildDropdownMenuItems(_companies).cast<DropdownMenuItem<Company>>();
     _selectedState = _dropdownMenuItems[0].value;
-    for (var item in _dropdownMenuItems) {
-      if (item.value.id == widget.address.region_id) {
-        _selectedState = item.value;
-      }
-    }
+
     super.initState();
   }
 
@@ -46,7 +41,6 @@ class _EditAdrressesScreenState extends State<EditAdrressesScreen> {
   onchangeDropdownItem(Company selectedState) {
     setState(() {
       _selectedState = selectedState;
-      widget.address.regionId = _selectedState.id;
     });
   }
 
@@ -78,7 +72,7 @@ class _EditAdrressesScreenState extends State<EditAdrressesScreen> {
     );
   }
 
-  Future editAddress(telephone, postcode, street, city, idAddress) async {
+  Future createAddress(telephone, postcode, street, city) async {
     final String url = 'https://' +
         base_url +
         '/rest/V1/customers/' +
@@ -97,7 +91,6 @@ class _EditAdrressesScreenState extends State<EditAdrressesScreen> {
             "lastname": widget.userData.lastname,
             "addresses": [
               {
-                "id": idAddress,
                 "firstname": widget.userData.firstname,
                 "lastname": widget.userData.lastname,
                 "street": [street[0], street[1], street[2]],
@@ -132,11 +125,6 @@ class _EditAdrressesScreenState extends State<EditAdrressesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    telephone = telephone == null ? widget.address.telephone : telephone;
-    postcode = postcode == null ? widget.address.postcode : postcode;
-    street = street == null ? widget.address.street : street;
-    city = city == null ? widget.address.city : city;
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -163,7 +151,7 @@ class _EditAdrressesScreenState extends State<EditAdrressesScreen> {
                   )),
               TextFormField(
                 autofocus: false,
-                initialValue: widget.address == "" ? "" : widget.address.city,
+                initialValue: "",
                 decoration: InputDecoration(
                   hintText: 'Cidade',
                   contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -186,8 +174,7 @@ class _EditAdrressesScreenState extends State<EditAdrressesScreen> {
               ),
               TextFormField(
                 autofocus: false,
-                initialValue:
-                    widget.address == "" ? "" : widget.address.street[2],
+                initialValue: "",
                 decoration: InputDecoration(
                   hintText: 'Bairro',
                   contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -210,8 +197,7 @@ class _EditAdrressesScreenState extends State<EditAdrressesScreen> {
               ),
               TextFormField(
                 autofocus: false,
-                initialValue:
-                    widget.address == "" ? "" : widget.address.street[0],
+                initialValue: "",
                 decoration: InputDecoration(
                   hintText: 'Enderço',
                   contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -234,8 +220,7 @@ class _EditAdrressesScreenState extends State<EditAdrressesScreen> {
               ),
               TextFormField(
                 autofocus: false,
-                initialValue:
-                    widget.address == "" ? "" : widget.address.street[1],
+                initialValue: "",
                 decoration: InputDecoration(
                   hintText: 'Numero',
                   contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -258,8 +243,7 @@ class _EditAdrressesScreenState extends State<EditAdrressesScreen> {
               ),
               TextFormField(
                 autofocus: false,
-                initialValue:
-                    widget.address == "" ? "" : widget.address.postcode,
+                initialValue: "",
                 decoration: InputDecoration(
                   hintText: 'CEP',
                   contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -282,8 +266,7 @@ class _EditAdrressesScreenState extends State<EditAdrressesScreen> {
               ),
               TextFormField(
                 autofocus: false,
-                initialValue:
-                    widget.address == "" ? "" : widget.address.telephone,
+                initialValue: "",
                 decoration: InputDecoration(
                   hintText: 'Telefone',
                   contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -314,7 +297,7 @@ class _EditAdrressesScreenState extends State<EditAdrressesScreen> {
           height: 50,
           child: RaisedButton(
             onPressed: () {
-              editAddress(telephone, postcode, street, city, widget.address.id);
+              createAddress(telephone, postcode, street, city);
             },
             child: Text(
               'Salvar Dados',

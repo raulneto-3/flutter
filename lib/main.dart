@@ -6,9 +6,9 @@ import 'APIs/ProfileModel.dart';
 import 'APIs/api.dart';
 import 'Cart/CartScreen.dart';
 import 'Categories/CategoriesScreen.dart';
-import 'Categories/ProductListScreen.dart';
+import 'SearchScreenProducts.dart';
+import 'Home/HomeScreen.dart';
 import 'LoginPage.dart';
-import 'Home/Home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,7 +59,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         pageChanged(index);
       },
       children: <Widget>[
-        Home(),
+        HomePage(),
         CategoriesScreen(),
         ProfileScreen(userData: userData),
         CartScreen(userData: userData),
@@ -108,13 +108,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ProductListScreen(
-                                        page: 1,
-                                        categorieId: 0,
-                                        name: search,
-                                        search: search,
-                                        option: 1,
-                                      )));
+                                  builder: (context) =>
+                                      Search(search: search)));
                         },
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
@@ -127,12 +122,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => ProductListScreen(
-                                              page: 1,
-                                              categorieId: 0,
-                                              name: search,
-                                              option: 1,
-                                            )));
+                                        builder: (context) =>
+                                            Search(search: search)));
                               },
                             ),
                             hintText: "Pesquisar",

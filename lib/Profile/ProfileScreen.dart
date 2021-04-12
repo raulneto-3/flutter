@@ -23,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: const EdgeInsets.only(bottom: 5, left: 15, right: 15),
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: 50,
+            height: 80,
             child: RaisedButton(
               onPressed: () {
                 Navigator.push(
@@ -34,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Align(
                 child: Text(
                   'Detalhes do Perfil',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 20),
                 ),
                 alignment: Alignment.centerLeft,
               ),
@@ -47,7 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: const EdgeInsets.only(bottom: 5, left: 15, right: 15),
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: 50,
+            height: 80,
             child: RaisedButton(
               onPressed: () {
                 Navigator.push(
@@ -59,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Align(
                 child: Text(
                   'Lista de Pedidos',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 20),
                 ),
                 alignment: Alignment.centerLeft,
               ),
@@ -72,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: const EdgeInsets.only(bottom: 5, left: 15, right: 15),
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: 50,
+            height: 80,
             child: RaisedButton(
               onPressed: () async {
                 SharedPreferences preferences =
@@ -83,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Align(
                 child: Text(
                   'Sair',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 20),
                 ),
                 alignment: Alignment.centerLeft,
               ),

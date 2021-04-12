@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mercado_na_nuvem/APIs/EndOrderModel.dart';
 import 'package:mercado_na_nuvem/APIs/api.dart';
 import 'package:mercado_na_nuvem/APIs/config.dart';
-import 'package:mercado_na_nuvem/Categories/ProductListScreen.dart';
+import '../SearchScreenProducts.dart';
 
 import '../main.dart';
 
@@ -41,12 +41,8 @@ class _EndCartCreateState extends State<EndCartCreate> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ProductListScreen(
-                                page: 1,
-                                categorieId: 0,
-                                name: search,
+                          builder: (context) => Search(
                                 search: search,
-                                option: 1,
                               )));
                 },
                 style: TextStyle(color: Colors.white),
@@ -60,11 +56,8 @@ class _EndCartCreateState extends State<EndCartCreate> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ProductListScreen(
-                                      page: 1,
-                                      categorieId: 0,
-                                      name: search,
-                                      option: 1,
+                                builder: (context) => Search(
+                                      search: search,
                                     )));
                       },
                     ),
