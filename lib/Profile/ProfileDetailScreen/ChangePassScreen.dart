@@ -45,7 +45,24 @@ class _EditAccountScreenState extends State<ChangePassScreen> {
     );
   }
 
+  Future<void> _showLoading() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            elevation: 5,
+            content: SingleChildScrollView(
+                child: Center(
+                    child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue[900]),
+            ))));
+      },
+    );
+  }
+
   Future editPass(currentPassword, newPassword) async {
+    _showLoading();
     final String url = 'https://' +
         base_url +
         '/rest/V1/customers/me/password?customerId=' +
@@ -61,9 +78,11 @@ class _EditAccountScreenState extends State<ChangePassScreen> {
     if (response.statusCode == 200) {
       Navigator.pop(context);
       Navigator.pop(context);
+      Navigator.pop(context);
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => ProfileDetailScreen()));
     } else {
+      Navigator.pop(context);
       _showMyDialog(response.body.toString(), response.statusCode.toString());
     }
   }

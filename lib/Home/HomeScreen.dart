@@ -28,7 +28,7 @@ class HomeState extends State<HomePage> {
           mainAxisSpacing: 20,
         ),
         key: paginatorGlobalKey,
-        pageLoadFuture: sendCountriesDataRequest,
+        pageLoadFuture: sendGetProductsRequest,
         pageItemsGetter: listItemsGetter,
         listItemBuilder: listItemBuilder,
         loadingWidgetBuilder: loadingWidgetMaker,
@@ -41,7 +41,7 @@ class HomeState extends State<HomePage> {
     );
   }
 
-  Future<CountriesData> sendCountriesDataRequest(int page) async {
+  Future<GetProducts> sendGetProductsRequest(int page) async {
     try {
       var url =
           'http://mercadonanuvem.com/rest/V1/products?searchCriteria[filterGroups][0][filters][0][field]=category_id& searchCriteria[filterGroups][0][filters][0][value]=2&searchCriteria[filterGroups][0][filters][0][conditionType]=eq&searchCriteria[sortOrders][0][field]=name&searchCriteria[sortOrders][0][direction]=ASC&fields=items[id,sku,name,price,status],total_count,search_criteria[page_size,current_page]&searchCriteria[pageSize]=10&searchCriteria[currentPage]=' +
@@ -50,20 +50,20 @@ class HomeState extends State<HomePage> {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + '1bbiuz9u0u9ruroxl7dkn1z36qty4khx',
       });
-      return CountriesData.fromResponse(response);
+      return GetProducts.fromResponse(response);
     } catch (e) {
       if (e is IOException) {
-        return CountriesData.withError(
-            'Please check your internet connection.');
+        return GetProducts.withError(
+            'Por favor, verifique sua conexão à internet.');
       } else {
-        return CountriesData.withError('Something went wrong.');
+        return GetProducts.withError('Algo deu errado.');
       }
     }
   }
 
-  List<dynamic> listItemsGetter(CountriesData countriesData) {
+  List<dynamic> listItemsGetter(GetProducts getProducts) {
     List<Items> list = [];
-    countriesData.products.items.forEach((value) {
+    getProducts.products.items.forEach((value) {
       list.add(value);
     });
     return list;
@@ -135,13 +135,13 @@ class HomeState extends State<HomePage> {
     );
   }
 
-  Widget errorWidgetMaker(CountriesData countriesData, retryListener) {
+  Widget errorWidgetMaker(GetProducts getProducts, retryListener) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text(countriesData.errorMessage),
+          child: Text(getProducts.errorMessage),
         ),
         FlatButton(
           onPressed: retryListener,
@@ -151,17 +151,17 @@ class HomeState extends State<HomePage> {
     );
   }
 
-  Widget emptyListWidgetMaker(CountriesData countriesData) {
+  Widget emptyListWidgetMaker(GetProducts getProducts) {
     return Center(
-      child: Text('No countries in the list'),
+      child: Text('Nenhum produto na lista'),
     );
   }
 
-  int totalPagesGetter(CountriesData countriesData) {
-    return countriesData.products.totalCount;
+  int totalPagesGetter(GetProducts getProducts) {
+    return getProducts.products.totalCount;
   }
 
-  bool pageErrorChecker(CountriesData countriesData) {
-    return countriesData.statusCode != 200;
+  bool pageErrorChecker(GetProducts getProducts) {
+    return getProducts.statusCode != 200;
   }
 }

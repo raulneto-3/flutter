@@ -7,7 +7,7 @@ import 'package:mercado_na_nuvem/Profile/ProfileDetailScreen/CreateAddresseScree
 import 'package:mercado_na_nuvem/Profile/ProfileDetailScreen/EditAddressesScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../SearchScreenProducts.dart';
+import 'package:mercado_na_nuvem/Widgets/SearchScreenProducts.dart';
 
 class CartAddressScreen extends StatefulWidget {
   final userData;
@@ -24,7 +24,24 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
   List filteredCountries = [];
   int selectedRadioTile;
 
+  Future<void> _showLoading() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            elevation: 5,
+            content: SingleChildScrollView(
+                child: Center(
+                    child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue[900]),
+            ))));
+      },
+    );
+  }
+
   Future configAddress(index, option) async {
+    _showLoading();
     var address = widget.userData.addresses[index];
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString('token');
@@ -79,12 +96,14 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
         }));
 
     if (response.statusCode == 200) {
+      Navigator.pop(context);
       return Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => CartPaymentScreen(
                   subTotal: widget.subTotal, taxaEntrega: taxaEntrega)));
     } else {
+      Navigator.pop(context);
       throw Exception('Erro ao Adicionar no Carrinha');
     }
   }
@@ -233,9 +252,7 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => Search(
-                    
                                 search: search,
-                            
                               )));
                 },
                 style: TextStyle(color: Colors.white),

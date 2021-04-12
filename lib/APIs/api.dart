@@ -58,25 +58,6 @@ Future<Products> fetchProducts(
   }
 }
 
-Future<Order> fetchOrders(int page, id) async {
-  final String url = 'http://' +
-      base_url +
-      '/rest/V1/orders?searchCriteria[filterGroups][0][filters][0][field]=customer_id&searchCriteria[filterGroups][0][filters][0][value]=' +
-      id.toString() +
-      '&searchCriteria[sortOrders][0][field]=entity_id&searchCriteria[sortOrders][0][direction]=DESC&searchCriteria[pageSize]=15&fields=items[payment[additional_information],shipping_description,base_shipping_amount,billing_address,items[name,price,sku,qty_ordered],status,increment_id,created_at,customer_firstname,customer_lastname,grand_total,entity_id],total_count,search_criteria[page_size,current_page]&searchCriteria[currentPage]=' +
-      page.toString();
-  final response = await http.get(url, headers: {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer " + '1bbiuz9u0u9ruroxl7dkn1z36qty4khx',
-  });
-
-  if (response.statusCode == 200) {
-    return Order.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('Erro ao carregar os Pedidos');
-  }
-}
-
 Future editProfile(account, email, lastname, firstname) async {
   final String url =
       'https://' + base_url + '/rest/V1/customers/' + account.id.toString();
@@ -96,9 +77,9 @@ Future editProfile(account, email, lastname, firstname) async {
       }));
 
   if (response.statusCode == 200) {
-    return print('1');
+    return true;
   } else {
-    return print('2');
+    return false;
   }
 }
 

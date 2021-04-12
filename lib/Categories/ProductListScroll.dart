@@ -6,8 +6,7 @@ import 'package:flutter_paginator/flutter_paginator.dart';
 import 'package:mercado_na_nuvem/APIs/ProdutcsModel.dart';
 import 'package:mercado_na_nuvem/APIs/config.dart';
 import 'package:mercado_na_nuvem/Categories/ProductsDetailScreen.dart';
-
-import '../SearchScreenProducts.dart';
+import 'package:mercado_na_nuvem/Widgets/SearchScreenProducts.dart';
 
 class ProductListScroll extends StatefulWidget {
   final categorieId;
@@ -94,7 +93,7 @@ class _ProductListScrollState extends State<ProductListScroll> {
           mainAxisSpacing: 20,
         ),
         key: paginatorGlobalKey,
-        pageLoadFuture: sendCountriesDataRequest,
+        pageLoadFuture: sendGetProductsRequest,
         pageItemsGetter: listItemsGetter,
         listItemBuilder: listItemBuilder,
         loadingWidgetBuilder: loadingWidgetMaker,
@@ -107,7 +106,7 @@ class _ProductListScrollState extends State<ProductListScroll> {
     );
   }
 
-  Future<CountriesData> sendCountriesDataRequest(int page) async {
+  Future<GetProducts> sendGetProductsRequest(int page) async {
     try {
       var url = 'http://' +
           base_url +
@@ -119,20 +118,19 @@ class _ProductListScrollState extends State<ProductListScroll> {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + '1bbiuz9u0u9ruroxl7dkn1z36qty4khx',
       });
-      return CountriesData.fromResponse(response);
+      return GetProducts.fromResponse(response);
     } catch (e) {
       if (e is IOException) {
-        return CountriesData.withError(
-            'Please check your internet connection.');
+        return GetProducts.withError('Please check your internet connection.');
       } else {
-        return CountriesData.withError('Something went wrong.');
+        return GetProducts.withError('Something went wrong.');
       }
     }
   }
 
-  List<dynamic> listItemsGetter(CountriesData countriesData) {
+  List<dynamic> listItemsGetter(GetProducts getProducts) {
     List<Items> list = [];
-    countriesData.products.items.forEach((value) {
+    getProducts.products.items.forEach((value) {
       list.add(value);
     });
     return list;
@@ -204,13 +202,13 @@ class _ProductListScrollState extends State<ProductListScroll> {
     );
   }
 
-  Widget errorWidgetMaker(CountriesData countriesData, retryListener) {
+  Widget errorWidgetMaker(GetProducts getProducts, retryListener) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text(countriesData.errorMessage),
+          child: Text(getProducts.errorMessage),
         ),
         FlatButton(
           onPressed: retryListener,
@@ -220,17 +218,17 @@ class _ProductListScrollState extends State<ProductListScroll> {
     );
   }
 
-  Widget emptyListWidgetMaker(CountriesData countriesData) {
+  Widget emptyListWidgetMaker(GetProducts getProducts) {
     return Center(
       child: Text('No countries in the list'),
     );
   }
 
-  int totalPagesGetter(CountriesData countriesData) {
-    return countriesData.products.totalCount;
+  int totalPagesGetter(GetProducts getProducts) {
+    return getProducts.products.totalCount;
   }
 
-  bool pageErrorChecker(CountriesData countriesData) {
-    return countriesData.statusCode != 200;
+  bool pageErrorChecker(GetProducts getProducts) {
+    return getProducts.statusCode != 200;
   }
 }

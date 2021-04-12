@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mercado_na_nuvem/APIs/EndOrderModel.dart';
 import 'package:mercado_na_nuvem/APIs/api.dart';
 import 'package:mercado_na_nuvem/APIs/config.dart';
-import '../SearchScreenProducts.dart';
+import 'package:mercado_na_nuvem/Widgets/SearchScreenProducts.dart';
 
 import '../main.dart';
 

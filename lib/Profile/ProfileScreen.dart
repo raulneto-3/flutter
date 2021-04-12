@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Order/OrderListScreen.dart';
+import 'Order/OrderListScroll.dart';
 import 'ProfileDetailScreen/ProfileDetailScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -53,8 +53,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => OrderListScreen(
-                            page: 1, userData: widget.userData)));
+                        builder: (context) =>
+                            OrderListScroll(userData: widget.userData)));
               },
               child: Align(
                 child: Text(

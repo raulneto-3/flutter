@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 class Order {
   List<Items> items;
   SearchCriteria searchCriteria;
@@ -239,5 +242,20 @@ class Payment {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['additional_information'] = this.additionalInformation;
     return data;
+  }
+}
+
+class GetOrder {
+  Order products;
+  int statusCode;
+  String errorMessage;
+
+  GetOrder.fromResponse(http.Response response) {
+    this.statusCode = response.statusCode;
+    products = Order.fromJson(jsonDecode(response.body));
+  }
+
+  GetOrder.withError(String errorMessage) {
+    this.errorMessage = errorMessage;
   }
 }

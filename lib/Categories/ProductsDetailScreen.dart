@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:mercado_na_nuvem/APIs/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../SearchScreenProducts.dart';
+import 'package:mercado_na_nuvem/Widgets/SearchScreenProducts.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final product;
@@ -22,6 +22,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   List filteredCountries = [];
 
   Future addItem(sku, qty) async {
+    _showLoading();
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var customerId = preferences.getInt('customerId').toString();
     final String url =
@@ -35,10 +36,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             {"sku": sku, "qty": int.parse(qty), "customer_id": customerId}));
 
     if (response.statusCode == 200) {
+      Navigator.of(context).pop();
       _showMyDialog("Item Adicionado", "Ok");
     } else if (response.statusCode == 400) {
+      Navigator.of(context).pop();
       _showMyDialog("Fora de Estoque", "Erro");
     } else {
+      Navigator.of(context).pop();
       throw Exception('Erro ao Adicionar no Carrinho');
     }
   }
@@ -67,6 +71,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
           ],
         );
+      },
+    );
+  }
+
+  Future<void> _showLoading() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            elevation: 5,
+            content: SingleChildScrollView(
+                child: Center(
+                    child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue[900]),
+            ))));
       },
     );
   }

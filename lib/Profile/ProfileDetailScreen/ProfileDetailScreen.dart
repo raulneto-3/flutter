@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mercado_na_nuvem/APIs/ProfileModel.dart';
 import 'package:mercado_na_nuvem/APIs/api.dart';
-import '../../SearchScreenProducts.dart';
+import 'package:mercado_na_nuvem/Widgets/SearchScreenProducts.dart';
 import 'CreateAddresseScreen.dart';
 import 'EditAccountScreen.dart';
 import 'EditAddressesScreen.dart';

@@ -2,9 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:mercado_na_nuvem/APIs/config.dart';
-import '../SearchScreenProducts.dart';
+import 'package:mercado_na_nuvem/Widgets/SearchScreenProducts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'EndCartScreen.dart';
 
 class CartPaymentScreen extends StatefulWidget {
@@ -16,7 +15,6 @@ class CartPaymentScreen extends StatefulWidget {
 }
 
 class _CartPaymentScreenState extends State<CartPaymentScreen> {
-  List<bool> _isChecked;
   bool isSearching = false;
   var search;
   List countries = [];
@@ -36,7 +34,24 @@ class _CartPaymentScreenState extends State<CartPaymentScreen> {
     });
   }
 
+  Future<void> _showLoading() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            elevation: 5,
+            content: SingleChildScrollView(
+                child: Center(
+                    child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue[900]),
+            ))));
+      },
+    );
+  }
+
   Future createOrder(method) async {
+    _showLoading();
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString('token');
     final String url = 'https://' + base_url + '/rest/V1/carts/mine/order';
@@ -50,12 +65,14 @@ class _CartPaymentScreenState extends State<CartPaymentScreen> {
         }));
 
     if (response.statusCode == 200) {
+      Navigator.pop(context);
       return Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) =>
                   EndCartCreate(order: response.body.replaceAll('"', ''))));
     } else {
+      Navigator.pop(context);
       throw Exception('Erro ao Adicionar no Carrinha');
     }
   }

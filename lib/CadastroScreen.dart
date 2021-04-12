@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'APIs/config.dart';
-import 'SearchScreenProducts.dart';
+import 'Widgets/SearchScreenProducts.dart';
 import 'LoginPage.dart';
 
 class CadastroScreen extends StatefulWidget {

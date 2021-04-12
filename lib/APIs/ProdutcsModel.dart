@@ -83,18 +83,17 @@ class SearchCriteria {
   }
 }
 
-class CountriesData {
+class GetProducts {
   Products products;
   int statusCode;
   String errorMessage;
 
-  CountriesData.fromResponse(http.Response response) {
+  GetProducts.fromResponse(http.Response response) {
     this.statusCode = response.statusCode;
     products = Products.fromJson(jsonDecode(response.body));
-    print(products);
   }
 
-  CountriesData.withError(String errorMessage) {
+  GetProducts.withError(String errorMessage) {
     this.errorMessage = errorMessage;
   }
 }

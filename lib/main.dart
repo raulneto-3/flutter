@@ -6,9 +6,9 @@ import 'APIs/ProfileModel.dart';
 import 'APIs/api.dart';
 import 'Cart/CartScreen.dart';
 import 'Categories/CategoriesScreen.dart';
-import 'SearchScreenProducts.dart';
 import 'Home/HomeScreen.dart';
 import 'LoginPage.dart';
+import 'Widgets/SearchScreenProducts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

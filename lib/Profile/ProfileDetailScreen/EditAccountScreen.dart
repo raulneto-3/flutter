@@ -17,6 +17,22 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> _showLoading() async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+              elevation: 5,
+              content: SingleChildScrollView(
+                  child: Center(
+                      child: CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue[900]),
+              ))));
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -136,16 +152,22 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
           height: 50,
           child: RaisedButton(
             onPressed: () {
-              editProfile(
-                  widget.account,
-                  email == null ? widget.account.email : email,
-                  lastname == null ? widget.account.lastname : lastname,
-                  firstname == null ? widget.account.firstname : firstname);
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ProfileDetailScreen()));
+              // _showLoading();
+              // final boll = editProfile(
+              //     widget.account,
+              //     email == null ? widget.account.email : email,
+              //     lastname == null ? widget.account.lastname : lastname,
+              //     firstname == null ? widget.account.firstname : firstname);
+              // // ignore: unrelated_type_equality_checks
+              // if (boll == true) {
+              //   Navigator.pop(context);
+              //   Navigator.pushReplacement(
+              //       context,
+              //       MaterialPageRoute(
+              //           builder: (context) => ProfileDetailScreen()));
+              // } else {
+              //   Navigator.pop(context);
+              // }
             },
             child: Text(
               'Salvar Dados',
