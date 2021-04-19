@@ -13,7 +13,9 @@ class Products {
     if (json['items'] != null) {
       items = new List<Items>();
       json['items'].forEach((v) {
-        items.add(new Items.fromJson(v));
+        if (v["extension_attributes"]["stock_qtd"] != 0) {
+          items.add(new Items.fromJson(v));
+        }
       });
     }
     searchCriteria = json['search_criteria'] != null
@@ -42,8 +44,15 @@ class Items {
   String name;
   var price;
   int status;
+  ExtensionAttributes extensionAttributes;
 
-  Items({this.id, this.sku, this.name, this.price, this.status});
+  Items(
+      {this.id,
+      this.sku,
+      this.name,
+      this.price,
+      this.status,
+      this.extensionAttributes});
 
   Items.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -51,6 +60,9 @@ class Items {
     name = json['name'];
     price = json['price'];
     status = json['status'];
+    extensionAttributes = json['extension_attributes'] != null
+        ? new ExtensionAttributes.fromJson(json['extension_attributes'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -60,6 +72,9 @@ class Items {
     data['name'] = this.name;
     data['price'] = this.price;
     data['status'] = this.status;
+    if (this.extensionAttributes != null) {
+      data['extension_attributes'] = this.extensionAttributes.toJson();
+    }
     return data;
   }
 }
@@ -95,5 +110,21 @@ class GetProducts {
 
   GetProducts.withError(String errorMessage) {
     this.errorMessage = errorMessage;
+  }
+}
+
+class ExtensionAttributes {
+  int stockQtd;
+
+  ExtensionAttributes({this.stockQtd});
+
+  ExtensionAttributes.fromJson(Map<String, dynamic> json) {
+    stockQtd = json['stock_qtd'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['stock_qtd'] = this.stockQtd;
+    return data;
   }
 }

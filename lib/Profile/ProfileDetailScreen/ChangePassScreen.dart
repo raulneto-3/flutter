@@ -92,11 +92,11 @@ class _EditAccountScreenState extends State<ChangePassScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.blue),
+        backgroundColor: Colors.blue,
+        iconTheme: IconThemeData(color: Colors.white),
         title: Text(
           'Senha',
-          style: TextStyle(color: Colors.blue),
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: Container(
@@ -180,16 +180,19 @@ class _EditAccountScreenState extends State<ChangePassScreen> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 8, left: 15, right: 15),
-        child: RaisedButton(
-          onPressed: () {
-            editPass(currentPassword, password);
-          },
-          child: Text(
-            'Salvar Dados',
-            style: TextStyle(color: Colors.white),
+        child: SizedBox(
+          height: 50,
+          child: RaisedButton(
+            onPressed: () {
+              editPass(currentPassword, password);
+            },
+            child: Text(
+              'Salvar Dados',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            color: Colors.blue,
+            elevation: 5,
           ),
-          color: Colors.blue,
-          elevation: 5,
         ),
       ),
     );

@@ -109,53 +109,38 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
                               child: Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: const EdgeInsets.only(left: 16),
                                     child: Container(
-                                      height: 60,
-                                      width: 60,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                            fit: BoxFit.fill,
-                                            image: NetworkImage(
-                                              'https://mercadonanuvem.s3-sa-east-1.amazonaws.com/categorias/' +
-                                                  widget.subCategories.id
-                                                      .toString() +
-                                                  '.webp',
+                                      height: 50,
+                                      width: MediaQuery.of(context).size.width /
+                                          1.2,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            widget.subCategories
+                                                .subChildrenData[index].name,
+                                            style: TextStyle(
+                                              fontSize: 17,
                                             ),
-                                          )),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 80,
-                                    width:
-                                        MediaQuery.of(context).size.width / 1.5,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          widget.subCategories
-                                              .subChildrenData[index].name,
-                                          style: TextStyle(
-                                            fontSize: 17,
+                                            textAlign: TextAlign.start,
                                           ),
-                                          textAlign: TextAlign.start,
-                                        ),
-                                        Text(
-                                          widget
-                                              .subCategories
-                                              .subChildrenData[index]
-                                              .productCount
-                                              .toString(),
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.blueAccent),
-                                        ),
-                                      ],
+                                          Text(
+                                            widget
+                                                .subCategories
+                                                .subChildrenData[index]
+                                                .productCount
+                                                .toString(),
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.blueAccent),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   Padding(

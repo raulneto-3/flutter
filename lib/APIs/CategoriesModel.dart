@@ -7,7 +7,9 @@ class Categories {
     if (json['children_data'] != null) {
       childrenData = new List<ChildrenData>();
       json['children_data'].forEach((v) {
-        childrenData.add(new ChildrenData.fromJson(v));
+        if (v['name'] != "- Reserva") {
+          childrenData.add(new ChildrenData.fromJson(v));
+        }
       });
     }
   }
@@ -30,14 +32,16 @@ class ChildrenData {
   ChildrenData({this.id, this.name, this.productCount, this.subChildrenData});
 
   ChildrenData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    productCount = json['product_count'];
-    name = json['name'];
-    if (json['children_data'] != null) {
-      subChildrenData = new List<SubChildrenData>();
-      json['children_data'].forEach((v) {
-        subChildrenData.add(new SubChildrenData.fromJson(v));
-      });
+    if (json['name'] != "- Reserva") {
+      id = json['id'];
+      productCount = json['product_count'];
+      name = json['name'];
+      if (json['children_data'] != null) {
+        subChildrenData = new List<SubChildrenData>();
+        json['children_data'].forEach((v) {
+          subChildrenData.add(new SubChildrenData.fromJson(v));
+        });
+      }
     }
   }
 

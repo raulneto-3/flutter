@@ -75,9 +75,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             height: 80,
             child: RaisedButton(
               onPressed: () async {
-                SharedPreferences preferences =
-                    await SharedPreferences.getInstance();
-                await preferences.clear();
+                // SharedPreferences preferences =
+                //     await SharedPreferences.getInstance();
+                // await preferences.clear();
                 Navigator.pop(context);
               },
               child: Align(

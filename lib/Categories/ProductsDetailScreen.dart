@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mercado_na_nuvem/APIs/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:mercado_na_nuvem/Widgets/SearchScreenProducts.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -37,7 +36,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
     if (response.statusCode == 200) {
       Navigator.of(context).pop();
-      _showMyDialog("Item Adicionado", "Ok");
+      _showCheck();
+      Future.delayed(
+          const Duration(seconds: 3), () => Navigator.of(context).pop());
     } else if (response.statusCode == 400) {
       Navigator.of(context).pop();
       _showMyDialog("Fora de Estoque", "Erro");
@@ -71,6 +72,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
           ],
         );
+      },
+    );
+  }
+
+  Future<void> _showCheck() async {
+    Navigator.of(context).pop();
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        Future.delayed(
+            const Duration(seconds: 1), () => Navigator.of(context).pop());
+        return AlertDialog(
+            elevation: 5,
+            content: SingleChildScrollView(
+                child: Center(
+                    child: Icon(
+              Icons.done,
+              size: 40,
+              color: Colors.green,
+            ))));
       },
     );
   }
@@ -212,9 +234,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   controller: qty,
                   decoration: new InputDecoration(labelText: "Quantidade:"),
                   keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    // qty.text = value;
-                  },
+                  onChanged: (value) {},
                 ),
               ),
             ),
@@ -275,7 +295,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           height: 50,
           child: RaisedButton(
             onPressed: () {
-              addItem(widget.product.sku, qty.text);
+              if (int.parse(qty.text) >
+                  widget.product.extensionAttributes.stockQtd) {
+                _showMyDialog("Quantidade Indisponivel", "Estoque");
+              } else {
+                addItem(widget.product.sku, qty.text);
+              }
             },
             child: Text(
               'Adicionar ao Carrinho',

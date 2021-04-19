@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:mercado_na_nuvem/APIs/config.dart';
+import 'package:mercado_na_nuvem/Cart/CartAddressScreen2.dart';
 import 'CompanyModel.dart';
 import 'ProfileDetailScreen.dart';
 
 class CreateAdrresseScreen extends StatefulWidget {
   final userData;
-  const CreateAdrresseScreen({Key key, this.userData});
+  final callback;
+  const CreateAdrresseScreen({Key key, this.userData, this.callback});
   @override
   _CreateAdrresseScreenState createState() => _CreateAdrresseScreenState();
 }
@@ -88,7 +90,7 @@ class _CreateAdrresseScreenState extends State<CreateAdrresseScreen> {
     );
   }
 
-  Future createAddress(telephone, postcode, street, city) async {
+  Future createAddress(telephone, postcode, street, city, callback) async {
     _showLoading();
     final String url = 'https://' +
         base_url +
@@ -117,16 +119,6 @@ class _CreateAdrresseScreenState extends State<CreateAdrresseScreen> {
                 "country_id": "BR",
                 "telephone": telephone
               },
-              {
-                "firstname": widget.userData.firstname,
-                "lastname": widget.userData.lastname,
-                "street": [street[0], street[1], street[2]],
-                "city": city,
-                "region_id": _selectedState.id,
-                "postcode": postcode,
-                "country_id": "BR",
-                "telephone": telephone
-              }
             ]
           },
         }));
@@ -134,8 +126,12 @@ class _CreateAdrresseScreenState extends State<CreateAdrresseScreen> {
     if (response.statusCode == 200) {
       Navigator.pop(context);
       Navigator.pop(context);
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => ProfileDetailScreen()));
+      if (callback == "cart") {
+        Navigator.pop(context);
+      } else if (callback == "profile") {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => ProfileDetailScreen()));
+      }
     } else {
       Navigator.pop(context);
       _showMyDialog('Erro ao Salvar!', 'Erro');
@@ -316,7 +312,7 @@ class _CreateAdrresseScreenState extends State<CreateAdrresseScreen> {
           height: 50,
           child: RaisedButton(
             onPressed: () {
-              createAddress(telephone, postcode, street, city);
+              createAddress(telephone, postcode, street, city, widget.callback);
             },
             child: Text(
               'Salvar Dados',

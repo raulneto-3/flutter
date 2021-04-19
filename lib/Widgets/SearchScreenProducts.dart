@@ -114,7 +114,7 @@ class _SearchState extends State<Search> {
     try {
       var url = 'http://' +
           base_url +
-          '/rest/V1/products?fields=items[id,sku,name,price,status],total_count,search_criteria[page_size,current_page]&searchCriteria[filter_groups][0][filters][0][field]=name&searchCriteria[filter_groups][0][filters][0][value]=%' +
+          '/rest/V1/products?fields=items[id,sku,name,price,status,extension_attributes[stock_qtd]],total_count,search_criteria[page_size,current_page]&searchCriteria[filter_groups][0][filters][0][field]=name&searchCriteria[filter_groups][0][filters][0][value]=%' +
           widget.search +
           '%&searchCriteria[filter_groups][0][filters][0][field]=name&searchCriteria[filter_groups][0][filters][0][value]=%' +
           widget.search +

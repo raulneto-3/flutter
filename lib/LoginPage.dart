@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'APIs/config.dart';
 import 'package:http/http.dart' as http;
-
 import 'CadastroScreen.dart';
 import 'main.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class LoginPage extends StatefulWidget {
   final String username;
@@ -22,9 +22,8 @@ class _LoginPageState extends State<LoginPage> {
   var _pass = '';
   var _fistClick = true;
   bool _showPassword = false;
-
 // ignore: non_constant_identifier_names
-  bool _remember_me;
+  bool _remember_me = true;
 
   Future<void> _showMyDialog(String msg) async {
     return showDialog<void>(
@@ -70,6 +69,22 @@ class _LoginPageState extends State<LoginPage> {
     preferences.setString('token', token);
   }
 
+  Future<void> _showLoading() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            elevation: 5,
+            content: SingleChildScrollView(
+                child: Center(
+                    child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue[900]),
+            ))));
+      },
+    );
+  }
+
   Widget build(BuildContext context) {
     if (user == '') {
       user = widget.username == "" ? user : widget.username;
@@ -78,6 +93,7 @@ class _LoginPageState extends State<LoginPage> {
     }
     // ignore: unused_element
     Future mnnLoginAdmin(user, pass) async {
+      _showLoading();
       String url =
           'https://' + base_url + '/rest/V1/integration/customer/token';
       try {
@@ -93,22 +109,21 @@ class _LoginPageState extends State<LoginPage> {
         } else if (response.statusCode == 201) {
           saveLogin();
           saveToken(response.body);
+          Navigator.pop(context);
           return Navigator.push(context,
               MaterialPageRoute(builder: (context) => BottomNavBar(page: 0)));
         } else if (response.statusCode == 401) {
+          Navigator.pop(context);
           _showMyDialog("Senha Invalida!!");
         } else {
+          Navigator.pop(context);
           _showMyDialog("Erro Sistema!!");
         }
       } catch (error) {
         _fistClick = true;
+        Navigator.pop(context);
         _showMyDialog('Erro Sistema!!');
       }
-
-      return Center(
-          child: CircularProgressIndicator(
-        valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue[900]),
-      ));
     }
 
     final logo = Hero(
@@ -194,7 +209,8 @@ class _LoginPageState extends State<LoginPage> {
         },
         padding: EdgeInsets.all(12),
         color: Colors.blue,
-        child: Text('Entrar', style: TextStyle(color: Colors.white)),
+        child:
+            Text('Entrar', style: TextStyle(color: Colors.white, fontSize: 16)),
       ),
     );
 
@@ -243,7 +259,8 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 padding: EdgeInsets.all(12),
                 color: Colors.blue,
-                child: Text('Cadastrar', style: TextStyle(color: Colors.white)),
+                child: Text('Cadastrar',
+                    style: TextStyle(color: Colors.white, fontSize: 16)),
               ),
             ),
           ],

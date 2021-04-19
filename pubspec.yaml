@@ -27,12 +27,10 @@ dependencies:
   http: ^0.12.2
   intl: ^0.16.1
   shared_preferences: ^0.5.12+4
-  carousel_pro: ^1.0.0
   flutter_launcher_icons: ^0.8.1
   flutter_paginator: ^0.0.6
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  flutter_password_strength: ^0.1.5
+  flutter_signin_button: ^1.1.0
   cupertino_icons: ^1.0.0
 
 dev_dependencies:

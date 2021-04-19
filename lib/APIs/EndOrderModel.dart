@@ -1,5 +1,5 @@
 class EndOrder {
-  int grandTotal;
+  var grandTotal;
   String incrementId;
   String shippingDescription;
   int shippingAmount;
@@ -60,7 +60,7 @@ class EndOrder {
 class Items {
   String createdAt;
   String name;
-  int price;
+  var price;
   int qtyOrdered;
 
   Items({this.createdAt, this.name, this.price, this.qtyOrdered});

@@ -1,8 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:flutter_password_strength/flutter_password_strength.dart';
 import 'APIs/config.dart';
 import 'Widgets/SearchScreenProducts.dart';
 import 'LoginPage.dart';
@@ -53,8 +52,25 @@ class _CadastroScreenState extends State<CadastroScreen> {
     );
   }
 
+  Future<void> _showLoading() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            elevation: 5,
+            content: SingleChildScrollView(
+                child: Center(
+                    child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue[900]),
+            ))));
+      },
+    );
+  }
+
   Future createCustomer(
       email, firstname, lastname, password, passwordConfirm) async {
+    _showLoading();
     String url = 'https://' + base_url + '/rest/V1/customers';
     if (password == passwordConfirm) {
       try {
@@ -69,20 +85,29 @@ class _CadastroScreenState extends State<CadastroScreen> {
               "password": password
             }));
         if (response.statusCode == 200) {
+          Navigator.pop(context);
           return Navigator.push(
               context, MaterialPageRoute(builder: (context) => LoginPage()));
         } else if (response.statusCode == 201) {
+          Navigator.pop(context);
           return Navigator.push(
               context, MaterialPageRoute(builder: (context) => LoginPage()));
         } else if (response.statusCode == 401) {
+          Navigator.pop(context);
           _showMyDialog("Senha Invalida!!");
+        } else if (response.statusCode == 400) {
+          Navigator.pop(context);
+          _showMyDialog("Senha muito fraca!!");
         } else {
+          Navigator.pop(context);
           _showMyDialog("Erro Sistema!!");
         }
       } catch (error) {
+        Navigator.pop(context);
         _showMyDialog('Erro Sistema!!');
       }
     } else {
+      Navigator.pop(context);
       _showMyDialog('Confirme corretamente a Senha');
     }
   }
@@ -275,11 +300,28 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   });
                 },
               ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                child: FlutterPasswordStrength(
+                  password: password,
+                  radius: 5.5,
+                  strengthColors: TweenSequence([
+                    TweenSequenceItem(
+                        weight: 1.0,
+                        tween:
+                            ColorTween(begin: Colors.red, end: Colors.yellow)),
+                    TweenSequenceItem(
+                        weight: 1.0,
+                        tween: ColorTween(
+                            begin: Colors.yellow, end: Colors.green)),
+                  ]),
+                ),
+              ),
               TextFormField(
                 autofocus: false,
                 initialValue: '',
                 obscureText: !this._showPasswordConf,
-
                 decoration: InputDecoration(
                   hintText: 'Confirmar Senha',
                   contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -317,17 +359,20 @@ class _CadastroScreenState extends State<CadastroScreen> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 8, left: 15, right: 15),
-        child: RaisedButton(
-          onPressed: () {
-            createCustomer(
-                email, firstname, lastname, password, passwordConfirm);
-          },
-          child: Text(
-            'Criar Conta',
-            style: TextStyle(color: Colors.white),
+        child: SizedBox(
+          height: 50,
+          child: RaisedButton(
+            onPressed: () {
+              createCustomer(
+                  email, firstname, lastname, password, passwordConfirm);
+            },
+            child: Text(
+              'Criar Conta',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            color: Colors.blue,
+            elevation: 5,
           ),
-          color: Colors.blue,
-          elevation: 5,
         ),
       ),
     );

@@ -15,6 +15,7 @@ void main() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   var user = preferences.getString('user');
   var pass = preferences.getString('pass');
+
   runApp(MaterialApp(
     home: LoginPage(
         username: user == null ? '' : user, password: pass == null ? '' : pass),

@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:mercado_na_nuvem/APIs/ProdutcsModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'CartModel.dart';
 import 'CategoriesModel.dart';
 import 'EndOrderModel.dart';
-import 'OrdersModel.dart';
 import 'ProfileModel.dart';
 import 'config.dart';
 
@@ -22,39 +20,6 @@ Future<Categories> fetchCategories() async {
     return Categories.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Erro ao carregar as Categorias');
-  }
-}
-
-Future<Products> fetchProducts(
-    int page, int categorieId, int option, String search) async {
-  var url;
-  if (option == 0) {
-    url = 'http://' +
-        base_url +
-        '/rest/V1/products?searchCriteria[filterGroups][0][filters][0][field]=category_id& searchCriteria[filterGroups][0][filters][0][value]=' +
-        categorieId.toString() +
-        '&searchCriteria[filterGroups][0][filters][0][conditionType]=eq&searchCriteria[sortOrders][0][field]=name&searchCriteria[sortOrders][0][direction]=ASC&fields=items[id,sku,name,price,status],total_count,search_criteria[page_size,current_page]&searchCriteria[pageSize]=15&searchCriteria[currentPage]=' +
-        page.toString();
-  } else if (option == 1) {
-    url = 'http://' +
-        base_url +
-        '/rest/V1/products?fields=items[id,sku,name,price,status],total_count,search_criteria[page_size,current_page]&searchCriteria[filter_groups][0][filters][0][field]=name&searchCriteria[filter_groups][0][filters][0][value]=%' +
-        search +
-        '%&searchCriteria[filter_groups][0][filters][0][field]=name&searchCriteria[filter_groups][0][filters][0][value]=%' +
-        search +
-        '&searchCriteria[filter_groups][0][filters][0][field]=name&searchCriteria[filter_groups][0][filters][0][value]=' +
-        search +
-        '%&searchCriteria[filter_groups][0][filters][0][condition_type]=like&searchCriteria[pageSize]=15&searchCriteria[currentPage]=' +
-        page.toString();
-  }
-  final response = await http.get(url, headers: {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer " + '1bbiuz9u0u9ruroxl7dkn1z36qty4khx',
-  });
-  if (response.statusCode == 200) {
-    return Products.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('Erro ao carregar os Produtos');
   }
 }
 
@@ -88,7 +53,7 @@ Future<Cart> getCart() async {
   var token = preferences.getString('token');
   final String url = 'https://' +
       base_url +
-      '/rest/V1/carts/mine?fields=id,customer[id,email,firstname,lastname,addresses[id,region_id,region,city,country_id,street,telephone,postcode]],items[item_id,sku,qty,name,price]';
+      '/rest/default/V1/carts/mine?fields=id,customer[id,email,firstname,lastname,addresses[id,region_id,region,city,country_id,street,telephone,postcode]],items[item_id,sku,qty,name,price]';
   final response = await http.get(url, headers: {
     "Content-Type": "application/x-www-form-urlencoded",
     "Authorization": "Bearer " + token,
@@ -97,7 +62,7 @@ Future<Cart> getCart() async {
   if (response.statusCode == 200) {
     return Cart.fromJson(jsonDecode(response.body));
   } else {
-    throw Exception('Erro ao carregar o Perfil');
+    throw Exception(response.statusCode);
   }
 }
 

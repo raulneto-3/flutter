@@ -112,7 +112,7 @@ class _ProductListScrollState extends State<ProductListScroll> {
           base_url +
           '/rest/V1/products?searchCriteria[filterGroups][0][filters][0][field]=category_id& searchCriteria[filterGroups][0][filters][0][value]=' +
           widget.categorieId.toString() +
-          '&searchCriteria[filterGroups][0][filters][0][conditionType]=eq&searchCriteria[sortOrders][0][field]=name&searchCriteria[sortOrders][0][direction]=ASC&fields=items[id,sku,name,price,status],total_count,search_criteria[page_size,current_page]&searchCriteria[pageSize]=10&searchCriteria[currentPage]=' +
+          '&searchCriteria[filterGroups][0][filters][0][conditionType]=eq&searchCriteria[sortOrders][0][field]=name&searchCriteria[sortOrders][0][direction]=ASC&fields=items[id,sku,name,price,status,extension_attributes[stock_qtd]],total_count,search_criteria[page_size,current_page]&searchCriteria[pageSize]=10&searchCriteria[currentPage]=' +
           page.toString();
       http.Response response = await http.get(url, headers: {
         "Content-Type": "application/json",
@@ -195,9 +195,9 @@ class _ProductListScrollState extends State<ProductListScroll> {
   }
 
   Widget loadingWidgetMaker() {
-    return Container(
-      alignment: Alignment.center,
-      height: 160.0,
+    return Center(
+      // alignment: Alignment.center,
+      // height: 160.0,
       child: CircularProgressIndicator(),
     );
   }

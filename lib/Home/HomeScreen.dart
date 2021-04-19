@@ -44,7 +44,7 @@ class HomeState extends State<HomePage> {
   Future<GetProducts> sendGetProductsRequest(int page) async {
     try {
       var url =
-          'http://mercadonanuvem.com/rest/V1/products?searchCriteria[filterGroups][0][filters][0][field]=category_id& searchCriteria[filterGroups][0][filters][0][value]=2&searchCriteria[filterGroups][0][filters][0][conditionType]=eq&searchCriteria[sortOrders][0][field]=name&searchCriteria[sortOrders][0][direction]=ASC&fields=items[id,sku,name,price,status],total_count,search_criteria[page_size,current_page]&searchCriteria[pageSize]=10&searchCriteria[currentPage]=' +
+          'http://mercadonanuvem.com/rest/V1/products?searchCriteria[filterGroups][0][filters][0][field]=category_id& searchCriteria[filterGroups][0][filters][0][value]=2&searchCriteria[filterGroups][0][filters][0][conditionType]=eq&searchCriteria[sortOrders][0][field]=name&searchCriteria[sortOrders][0][direction]=ASC&fields=items[id,sku,name,price,status,extension_attributes[stock_qtd]],total_count,search_criteria[page_size,current_page]&searchCriteria[pageSize]=10&searchCriteria[currentPage]=' +
               page.toString();
       http.Response response = await http.get(url, headers: {
         "Content-Type": "application/json",

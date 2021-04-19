@@ -113,7 +113,9 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
   @override
   void initState() {
     super.initState();
-    selectedRadioTile = widget.userData.addresses.length;
+    selectedRadioTile = widget.userData.addresses == null
+        ? 0
+        : widget.userData.addresses.length;
   }
 
   setSelectedRadioTile(int val) {
@@ -136,6 +138,7 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
                   MaterialPageRoute(
                       builder: (context) => CreateAdrresseScreen(
                             userData: widget.userData,
+                            callback: "cart",
                           )));
             },
             child: Text(
@@ -323,7 +326,9 @@ class _CartAddressScreenState extends State<CartAddressScreen> {
                         fontSize: 15,
                       ),
                     ),
-                    value: widget.userData.addresses.length,
+                    value: widget.userData.addresses == null
+                        ? 0
+                        : widget.userData.addresses.length,
                     onChanged: (val) {
                       setState(() {
                         taxaEntrega = 0;
